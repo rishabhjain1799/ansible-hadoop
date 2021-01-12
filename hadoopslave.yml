@@ -1,0 +1,57 @@
+- hosts: all
+  vars_prompt:
+          - name: dir
+            private: no
+            prompt: "Enter the Directory Name to Attach(Please Put / before name) "
+
+  tasks:
+    - file:
+        state: directory
+        path: "{{ dir }}"
+
+    - mount:
+         path: "{{ dir }}"
+         src: "/dev/cdrom"
+         state: mounted
+         fstype: "iso9660"
+
+    - pip:
+        name: "gdown"
+        state: present
+
+    - command: 
+          "gdown --id 1AQq1E5VRgQl8N-AoIZPtBuY4YA2I2MBp --output jdk.rpm"
+
+    - command: 
+           "gdown --id 1Dn8HgKuP_k339eb6Jt288bu1zLHINEFs --output hadoop.rpm"
+
+    - command:
+           "rpm -i jdk.rpm hadoop.rpm --force"
+
+    - file:
+          state: directory
+          path: "/dn"
+
+    - file:
+          state: absent
+          path: "/etc/hadoop/core-site.xml"
+
+    - file:
+          state: absent
+          path: "/etc/hadoop/hdfs-site.xml"
+
+    - copy:
+          src: "/root/slave/core-site.xml"
+          dest: "/etc/hadoop"
+
+    - copy:
+          src: "/root/slave/hdfs-site.xml"
+          dest: "/etc/hadoop"
+
+    - command:
+            "hadoop-daemon.sh start datanode"
+             
+
+
+
+
