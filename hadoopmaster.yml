@@ -1,0 +1,47 @@
+- hosts: localhost
+
+  tasks:
+
+    - pip:
+        name: "gdown"
+        state: present
+
+    - command: 
+          "gdown --id 1AQq1E5VRgQl8N-AoIZPtBuY4YA2I2MBp --output jdk.rpm"
+
+    - command: 
+           "gdown --id 1Dn8HgKuP_k339eb6Jt288bu1zLHINEFs --output hadoop.rpm"
+
+    - command:
+           "rpm -i jdk.rpm hadoop.rpm --force"
+
+    - file:
+          state: directory
+          path: "/nn"
+
+    - file:
+          state: absent
+          path: "/etc/hadoop/core-site.xml"
+
+    - file:
+          state: absent
+          path: "/etc/hadoop/hdfs-site.xml"
+
+    - copy:
+          src: "/root/core-site.xml"
+          dest: "/etc/hadoop"
+
+    - copy:
+          src: "/root/hdfs-site.xml"
+          dest: "/etc/hadoop"
+
+    - command:
+           "hadoop namenode -format -force"
+
+    - command:
+            "hadoop-daemon.sh start namenode"
+             
+
+
+
+

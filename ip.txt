@@ -1,0 +1,1 @@
+192.168.43.69	ansible_user=root	ansible_ssh_password=10sanyam98	ansible_connection=ssh
